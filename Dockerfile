@@ -53,5 +53,5 @@ USER root
 #CMD ["jupyter", "notebook", "--ip", "0.0.0.0"]
 #CMD sudo -i -u postgres /bin/bash -c "/usr/lib/postgresql/10/bin/pg_ctl -D /etc/postgresql/10/main -l /var/lib/postgresql/logfile start" && sudo -i -u jovyan /bin/bash -c "jupyter notebook --notebook-dir='/home/jovyan' --ip 0.0.0.0"
 #CMD /usr/lib/postgresql/10/bin/pg_ctl -D /etc/postgresql/10/main -l /var/lib/postgresql/logfile start && jupyter notebook --notebook-dir='/home/jovyan' --ip 0.0.0.0
-CMD postgresql start
-
+#CMD postgresql start
+ENTRYPOINT ["service", "postgresql", "start"]
