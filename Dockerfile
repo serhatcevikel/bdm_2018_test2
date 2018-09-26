@@ -25,7 +25,7 @@ USER ${NB_USER}
 USER root
 RUN apt-get update && \
     apt-get install -y python3-pip \
-    sudo postgresql less;
+    sudo postgresql;
 
 RUN pg_createcluster -u postgres -g postgres 10 main
 
