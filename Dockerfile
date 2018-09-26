@@ -42,7 +42,8 @@ RUN pip3 install --no-cache-dir notebook==5.*
 
 # Specify the default command to run
 USER root
-CMD ["service", "postgresql", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"; "su", "-", "jovyan"]
+RUN cd $HOME
+CMD ["/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/var/lib/postgresql/10/main", "-l", "logfile", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"; "su", "-", "jovyan"]
 #CMD ["jupyter", "notebook", "--ip", "0.0.0.0"]
 
 
