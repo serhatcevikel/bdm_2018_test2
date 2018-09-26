@@ -28,7 +28,7 @@ RUN apt-get update && \
     apt-get install -y python3-pip \
     sudo postgresql;
 
-RUN pg_createcluster -u postgres -g postgres 10 main
+#RUN pg_createcluster -u postgres -g postgres 10 main
 
 # install latest notebook
 RUN pip3 install --no-cache-dir notebook==5.*
