@@ -1,4 +1,4 @@
-FROM  sameersbn/postgresql:10
+FROM ubuntu:bionic
 #FROM  postgres:10.5
 
 # create user
@@ -25,7 +25,9 @@ USER ${NB_USER}
 USER root
 RUN apt-get update && \
     apt-get install -y python3-pip \
-    sudo;
+    sudo postgresql less;
+
+RUN pg_createcluster -u postgres -g postgres 10 main
 
 # install latest notebook
 RUN pip3 install --no-cache-dir notebook==5.*
@@ -39,7 +41,7 @@ RUN pip3 install --no-cache-dir notebook==5.*
 
 # Specify the default command to run
 USER root
-CMD ["postgres", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"]
+CMD ["postgresql", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"]
 #CMD ["jupyter", "notebook", "--ip", "0.0.0.0"]
 
 
