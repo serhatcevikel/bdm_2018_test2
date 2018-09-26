@@ -1,5 +1,6 @@
-FROM ubuntu:bionic
+#FROM ubuntu:bionic
 #FROM  postgres:10.5
+FROM debian:buster-20180831
 
 # create user
 ENV NB_USER jovyan
