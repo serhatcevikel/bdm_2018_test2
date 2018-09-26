@@ -28,6 +28,7 @@ RUN apt-get update && \
     apt-get install -y python3-pip \
     sudo postgresql;
 
+USER root
 RUN echo "postgres:postgres" | chpasswd
 
 #RUN pg_createcluster -u postgres -g postgres 10 main
@@ -46,7 +47,7 @@ RUN pip3 install --no-cache-dir notebook==5.*
 USER root
 #CMD ["/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/var/lib/postgresql/10/main", "-l", "logfile", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"; "su", "-", "jovyan"]
 #CMD ["/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/var/lib/postgresql/10/main", "-l", "logfile", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"; "su", "-", "jovyan"]
-CMD sudo service postgresql start && jupyter notebook --notebook-dir="/home/jovyan" --ip 0.0.0.0
+CMD service postgresql start && jupyter notebook --notebook-dir="/home/jovyan" --ip 0.0.0.0
 #CMD ["jupyter", "notebook", "--ip", "0.0.0.0"]
 
 
