@@ -43,12 +43,12 @@ quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions
 jupyter-nbextensions-configurator RISE nbpresent;
 
 ## install R kernel for jupyter
-RUN  Rscript rpack.R
+RUN  Rscript $HOME/rpack.R
 
 USER jovyan
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextensions_configurator enable --user
-RUN cp common.json $HOME/.jupyter/nbconfig/common.json
+RUN cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json
 
 RUN python3 -m bash_kernel.install
 RUN python3 -m sos_notebook.install
