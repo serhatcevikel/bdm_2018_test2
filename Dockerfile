@@ -29,7 +29,7 @@ RUN apt-get update && \
     python3-pip \
     sudo postgresql r-base libssl-dev \
     libpq-dev parallel \
-    libunwind-dev expect;
+    libunwind-dev expect curl;
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - \
 apt-get install -y nodejs;
