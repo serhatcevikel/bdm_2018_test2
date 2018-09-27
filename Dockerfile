@@ -97,6 +97,7 @@ RUN echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> $HOME/.bashrc
 RUN echo "export LC_ALL=C.UTF-8" >> $HOME/.bashrc
 RUN echo "export LANG=C.UTF-8" >> $HOME/.bashrc
 RUN echo "export EDITOR=vim" >> $HOME/.bashrc
+RUN mkdir -p $HOME/.config/pgcli
 RUN cp $HOME/pgcli_config $HOME/.config/pgcli/config
 RUN quilt install serhatcevikel/bdm_data
 RUN quilt export serhatcevikel/bdm_data $HOME/data
