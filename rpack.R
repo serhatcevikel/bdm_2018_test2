@@ -1,5 +1,5 @@
     cranlist <- c("devtools", "data.table",
-                    "RPostgreSQL", "sqldf", "JuniperKernel")
+                    "RPostgreSQL", "sqldf")
 
     githublist <- c("IRkernel/IRkernel")
 
