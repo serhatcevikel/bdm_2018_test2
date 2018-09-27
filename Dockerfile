@@ -111,6 +111,7 @@ RUN psql imdb postgresql < $HOME/data/imdb/imdb.sql
 
 # Specify the default command to run
 
+RUN cd $HOME
 USER jovyan
 #USER postgres
 #CMD ["/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/var/lib/postgresql/10/main", "-l", "logfile", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"; "su", "-", "jovyan"]
