@@ -57,7 +57,6 @@ jupyter-nbextensions-configurator RISE nbpresent;
 RUN beakerx install
 
 # nbpresent
-USER jovyan
 RUN python3 -m bash_kernel.install
 RUN python3 -m sos_notebook.install
 RUN jupyter contrib nbextension install
@@ -81,6 +80,7 @@ RUN jupyter-nbextension enable exercise2/main
 RUN cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json
 
 # quilt
+USER jovyan
 RUN quilt install serhatcevikel/bdm_data
 RUN quilt export serhatcevikel/bdm_data $HOME/data
 
