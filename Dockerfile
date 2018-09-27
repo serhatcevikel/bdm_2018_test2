@@ -55,7 +55,7 @@ jupyter-nbextensions-configurator RISE nbpresent;
 #RUN  Rscript $HOME/rpack.R
 
 RUN chown -R ${NB_UID} ${HOME}
-
+USER jovyan
 RUN beakerx install
 
 # nbpresent
@@ -81,6 +81,7 @@ RUN jupyter-nbextension enable exercise2/main --user
 RUN cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json
 
 # tldr
+USER root
 RUN npm install tldr -g
 RUN tldr -u
 
@@ -94,12 +95,16 @@ USER jovyan
 RUN echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> $HOME/.bashrc
 RUN echo "export LC_ALL=C.UTF-8" >> $HOME/.bashrc
 RUN echo "export LANG=C.UTF-8" >> $HOME/.bashrc
+RUN echo "export EDITOR=vim" >> $HOME/.bashrc
+RUN cp $HOME/pgcli_config $HOME/.config/pgcli/config
 RUN quilt install serhatcevikel/bdm_data
 RUN quilt export serhatcevikel/bdm_data $HOME/data
 
 ## pgcli default options
 
 # create imdb database
+RUN service postgresql status
+RUN ls /var/run/postgresql
 RUN createdb -U postgres imdb
 RUN gunzip -k $HOME/data/imdb/imdb.sql.gz
 RUN psql imdb postgresql < $HOME/data/imdb/imdb.sql 
