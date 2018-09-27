@@ -29,7 +29,8 @@ RUN apt-get update && \
     python3-pip \
     sudo postgresql r-base libssl-dev \
     libpq-dev parallel default-jre\
-    libunwind-dev expect curl wget less htop;
+    libunwind-dev expect curl wget less htop \
+    vim screen net-tools;
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
 apt-get install -y nodejs;
