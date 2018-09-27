@@ -87,8 +87,8 @@ RUN tldr -u
 
 #jdk? javahome?
 RUN wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar 
-RUN sudo -i -u postgres /bin/bash -c "/usr/lib/postgresql/10/bin/pg_ctl -D /etc/postgresql/10/main start"
-#RUN service postgresql start
+#RUN sudo -i -u postgres /bin/bash -c "/usr/lib/postgresql/10/bin/pg_ctl -D /etc/postgresql/10/main start"
+RUN service postgresql start
 RUN chown -R ${NB_UID} ${HOME}
 
 # quilt
