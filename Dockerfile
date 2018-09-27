@@ -88,7 +88,6 @@ RUN tldr -u
 #jdk? javahome?
 RUN wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar 
 #RUN sudo -i -u postgres /bin/bash -c "/usr/lib/postgresql/10/bin/pg_ctl -D /etc/postgresql/10/main start"
-RUN service postgresql start
 RUN chown -R ${NB_UID} ${HOME}
 
 # quilt
@@ -101,20 +100,20 @@ RUN mkdir -p $HOME/.config/pgcli
 RUN cp $HOME/pgcli_config $HOME/.config/pgcli/config
 RUN quilt install serhatcevikel/bdm_data
 RUN quilt export serhatcevikel/bdm_data $HOME/data
+RUN gunzip -k $HOME/data/imdb/imdb.sql.gz
 
 ## pgcli default options
 
 # create imdb database
-RUN service postgresql status
-RUN ls /var/run/postgresql
-RUN createdb -U postgres imdb
-RUN gunzip -k $HOME/data/imdb/imdb.sql.gz
-RUN psql imdb postgresql < $HOME/data/imdb/imdb.sql 
+USER root
+RUN service postgresql start && \
+    createdb -U postgres imdb && \
+    psql imdb postgresql < $HOME/data/imdb/imdb.sql; 
 
 # Specify the default command to run
 
-RUN cd $HOME
 USER jovyan
+RUN cd $HOME
 #USER postgres
 #CMD ["/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/var/lib/postgresql/10/main", "-l", "logfile", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"; "su", "-", "jovyan"]
 #ENTRYPOINT ["sudo", "-u", "postgres", "/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/etc/postgresql/10/main", "start"; "sudo", "-u", "jovyan", "jupyter", "notebook", "--notebook-dir='/home/jovyan'", "--ip", "0.0.0.0"]
