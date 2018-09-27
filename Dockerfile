@@ -87,6 +87,7 @@ RUN tldr -u
 #jdk? javahome?
 RUN wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar 
 RUN service postgresql start
+RUN chown -R ${NB_UID} ${HOME}
 
 # quilt
 USER jovyan
