@@ -48,11 +48,7 @@ RUN  Rscript rpack.R
 USER jovyan
 RUN jupyter contrib nbextension install --user
 RUN jupyter nbextensions_configurator enable --user
-RUN cat | perl -pe 'chomp if eof' > ~/.jupyter/nbconfig/common.json <<EOF
-{
-  "nbext_hide_incompat": false
-}
-EOF
+RUN cp common.json $HOME/.jupyter/nbconfig/common.json
 
 RUN python3 -m bash_kernel.install
 RUN python3 -m sos_notebook.install
