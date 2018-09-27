@@ -53,14 +53,15 @@ jupyter-nbextensions-configurator RISE nbpresent;
 ## install R kernel for jupyter
 #RUN  Rscript $HOME/rpack.R
 
-RUN jupyter contrib nbextension install
-RUN jupyter nbextensions_configurator enable
 
-RUN python3 -m bash_kernel.install
-RUN python3 -m sos_notebook.install
 RUN beakerx install
 
 # nbpresent
+USER jovyan
+RUN python3 -m bash_kernel.install
+RUN python3 -m sos_notebook.install
+RUN jupyter contrib nbextension install
+RUN jupyter nbextensions_configurator enable
 RUN jupyter nbextension install nbpresent --py --overwrite
 RUN jupyter nbextension enable nbpresent --py
 RUN jupyter serverextension enable nbpresent --py
@@ -77,7 +78,6 @@ RUN jupyter-nbextension enable autoscroll/main
 RUN jupyter-nbextension enable rubberband/main
 RUN jupyter-nbextension enable exercise2/main
 
-USER jovyan
 RUN cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json
 
 # quilt
