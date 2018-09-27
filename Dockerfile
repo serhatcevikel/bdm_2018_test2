@@ -66,7 +66,7 @@ RUN jupyter nbextension install nbpresent --py --overwrite --user
 RUN jupyter nbextension enable nbpresent --py --user
 RUN jupyter serverextension enable nbpresent --py --user
 RUN jupyter-nbextension enable codefolding/main --user
-RUN jupyter-nbextension install rise --py --sys-prefix --user
+RUN jupyter-nbextension install rise --py --user
 RUN jupyter-nbextension enable splitcell/splitcell --user
 RUN jupyter-nbextension enable hide_input/main --user
 RUN jupyter-nbextension enable nbextensions_configurator/tree_tab/main --user
@@ -94,6 +94,8 @@ RUN echo "export LC_ALL=C.UTF-8" >> $HOME/.bashrc
 RUN echo "export LANG=C.UTF-8" >> $HOME/.bashrc
 RUN quilt install serhatcevikel/bdm_data
 RUN quilt export serhatcevikel/bdm_data $HOME/data
+
+## pgcli default options
 
 # create imdb database
 RUN createdb -U postgres imdb
