@@ -54,9 +54,9 @@ jupyter-nbextensions-configurator RISE nbpresent;
 ## install R kernel for jupyter
 #RUN  Rscript $HOME/rpack.R
 
+RUN beakerx install
 RUN chown -R ${NB_UID} ${HOME}
 USER jovyan
-RUN beakerx install
 
 # nbpresent
 RUN python3 -m bash_kernel.install
