@@ -43,30 +43,7 @@ quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions
 jupyter-nbextensions-configurator RISE nbpresent;
 
 ## install R kernel for jupyter
-RUN  R --vanilla <<HERE
-    cranlist <- c("devtools", "data.table",
-                    "RPostgreSQL", "sqldf", "JuniperKernel")
-
-    githublist <- c("IRkernel/IRkernel")
-
-    ## cran packages
-    for (package in cranlist)
-    { 
-        if (!require(package, character.only = T, quietly = T))
-        {
-            install.packages(package)
-        }
-    }
-
-    ## install IR kernel
-    if (!require('IRkernel', character.only = T, quietly = T)) {
-        devtools::install_github('IRkernel/IRkernel')
-        IRkernel::installspec(user = FALSE)
-    }
-
-q()
-HERE
-
+RUN  Rscript rpack.R
 
 USER jovyan
 RUN jupyter contrib nbextension install --user
