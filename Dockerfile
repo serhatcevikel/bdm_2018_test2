@@ -76,8 +76,12 @@ RUN jupyter-nbextension enable toc2/main
 RUN jupyter-nbextension enable autoscroll/main 
 RUN jupyter-nbextension enable rubberband/main
 RUN jupyter-nbextension enable exercise2/main
-
 RUN cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json
+
+# tldr
+RUN npm install tldr
+RUN tldr -u
+
 RUN chown -R ${NB_UID} ${HOME}
 
 # quilt
@@ -85,9 +89,6 @@ USER jovyan
 RUN quilt install serhatcevikel/bdm_data
 RUN quilt export serhatcevikel/bdm_data $HOME/data
 
-# tldr
-RUN npm install tldr
-RUN tldr -u
 
 # Specify the default command to run
 
