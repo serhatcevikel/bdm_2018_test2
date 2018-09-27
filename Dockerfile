@@ -26,22 +26,86 @@ USER ${NB_USER}
 USER root
 RUN apt-get update && \
     apt-get install -y python3-pip \
-    sudo postgresql;
+    sudo postgresql r-base libssl-dev \
+    libpq-dev parallel man manpages expect
 
-USER root
 RUN echo "postgres:postgres" | chpasswd
+RUN perl -i -pe 's/(md5|peer)$/trust/g' /etc/postgresql/10/main/pg_hba.conf
+RUN echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan
 
 #RUN pg_createcluster -u postgres -g postgres 10 main
 
 # install latest notebook
-RUN pip3 install --no-cache-dir notebook==5.*
+#RUN pip3 install --no-cache-dir notebook==5.*
 
-#RUN pip3 install --no-cache notebook beakerx sos sos-notebook \
-#quilt bash_kernel
+RUN pip3 install --no-cache notebook beakerx sos sos-notebook \
+quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions \
+jupyter-nbextensions-configurator RISE nbpresent;
 
-#RUN python3 -m bash_kernel.install
-#RUN python3 -m sos_notebook.install
-#RUN beakerx install
+## install R kernel for jupyter
+RUN  R --vanilla <<HERE
+    cranlist <- c("devtools", "data.table",
+                    "RPostgreSQL", "sqldf", "JuniperKernel")
+
+    githublist <- c("IRkernel/IRkernel")
+
+    ## cran packages
+    for (package in cranlist)
+    { 
+        if (!require(package, character.only = T, quietly = T))
+        {
+            install.packages(package)
+        }
+    }
+
+    ## install IR kernel
+    if (!require('IRkernel', character.only = T, quietly = T)) {
+        devtools::install_github('IRkernel/IRkernel')
+        IRkernel::installspec(user = FALSE)
+    }
+
+q()
+HERE
+
+
+USER jovyan
+RUN jupyter contrib nbextension install --user
+RUN jupyter nbextensions_configurator enable --user
+RUN cat | perl -pe 'chomp if eof' > ~/.jupyter/nbconfig/common.json <<EOF
+{
+  "nbext_hide_incompat": false
+}
+EOF
+
+RUN python3 -m bash_kernel.install
+RUN python3 -m sos_notebook.install
+RUN beakerx install
+
+# nbpresent
+RUN jupyter nbextension install nbpresent --py --overwrite --user
+RUN jupyter nbextension enable nbpresent --py --user
+RUN jupyter serverextension enable nbpresent --py --user
+RUN jupyter-nbextension enable codefolding/main
+RUN jupyter-nbextension install rise --py --sys-prefix --user
+RUN jupyter-nbextension enable splitcell/splitcell --user
+RUN jupyter-nbextension enable hide_input/main --user
+RUN jupyter-nbextension enable nbextensions_configurator/tree_tab/main --user
+RUN jupyter-nbextension enable nbextensions_configurator/config_menu/main --user
+RUN jupyter-nbextension enable contrib_nbextensions_help_item/main  --user
+RUN jupyter-nbextension enable scroll_down/main --user
+RUN jupyter-nbextension enable toc2/main --user
+RUN jupyter-nbextension enable autoscroll/main  --user
+RUN jupyter-nbextension enable rubberband/main --user
+RUN jupyter-nbextension enable exercise2/main --user
+
+
+# quilt
+RUN quilt install serhatcevikel/bdm_data
+RUN quilt export serhatcevikel/bdm_data $HOME/data
+
+# tldr
+RUN npm install tldr
+RUN tldr -u
 
 # Specify the default command to run
 
