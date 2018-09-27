@@ -29,7 +29,7 @@ RUN apt-get update && \
     python3-pip \
     sudo postgresql r-base libssl-dev \
     libpq-dev parallel default-jre\
-    libunwind-dev expect curl wget less;
+    libunwind-dev expect curl wget less htop;
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
 apt-get install -y nodejs;
@@ -84,12 +84,14 @@ RUN npm install tldr -g
 RUN tldr -u
 
 #jdk? javahome?
-RUN echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> $HOME/.bashrc
 RUN wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar 
 RUN service postgresql start
 
 # quilt
 USER jovyan
+RUN echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> $HOME/.bashrc
+RUN echo "export LC_ALL=C.UTF-8" >> $HOME/.bashrc
+RUN echo "export LANG=C.UTF-8" >> $HOME/.bashrc
 RUN quilt install serhatcevikel/bdm_data
 RUN quilt export serhatcevikel/bdm_data $HOME/data
 
