@@ -108,7 +108,7 @@ RUN gunzip -k $HOME/data/imdb/imdb.sql.gz
 USER root
 RUN service postgresql start && \
     createdb -U postgres imdb && \
-    psql imdb postgresql < $HOME/data/imdb/imdb.sql; 
+    psql imdb postgres < $HOME/data/imdb/imdb.sql; 
 
 # Specify the default command to run
 
