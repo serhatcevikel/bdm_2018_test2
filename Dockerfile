@@ -31,7 +31,7 @@ RUN apt-get update && \
     libpq-dev parallel \
     libunwind-dev expect curl;
 
-RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - \
+RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
 apt-get install -y nodejs;
 
 RUN apt install -y build-essential
