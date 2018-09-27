@@ -28,8 +28,8 @@ RUN apt-get update && \
     apt-get install -y man manpages \
     python3-pip \
     sudo postgresql r-base libssl-dev \
-    libpq-dev parallel \
-    libunwind-dev expect curl;
+    libpq-dev parallel default-jre\
+    libunwind-dev expect curl wget;
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
 apt-get install -y nodejs;
@@ -79,10 +79,12 @@ RUN jupyter-nbextension enable exercise2/main
 RUN cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json
 
 # tldr
-RUN npm install tldr
+RUN npm install tldr -g
 RUN tldr -u
 
 RUN chown -R ${NB_UID} ${HOME}
+
+RUN wget -P `echo $JAVA_HOME`/jre/lib/ext https://jdbc.postgresql.org/download/postgresql-42.2.5.jar 
 
 # quilt
 USER jovyan
