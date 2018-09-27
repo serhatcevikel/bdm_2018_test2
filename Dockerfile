@@ -25,9 +25,17 @@ USER ${NB_USER}
 #RUN apt-get update && \
 USER root
 RUN apt-get update && \
-    apt-get install -y python3-pip \
+    apt-get install -y man manpages \
+    python3-pip \
     sudo postgresql r-base libssl-dev \
-    libpq-dev parallel man manpages expect
+    libpq-dev parallel \
+    libunwind-dev expect;
+
+RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - \
+apt-get install -y nodejs;
+
+RUN apt install -y build-essential
+
 
 RUN echo "postgres:postgres" | chpasswd
 RUN perl -i -pe 's/(md5|peer)$/trust/g' /etc/postgresql/10/main/pg_hba.conf
