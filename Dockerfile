@@ -78,6 +78,7 @@ RUN jupyter-nbextension enable rubberband/main
 RUN jupyter-nbextension enable exercise2/main
 
 RUN cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json
+RUN chown -R ${NB_UID} ${HOME}
 
 # quilt
 USER jovyan
