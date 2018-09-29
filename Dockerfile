@@ -130,8 +130,9 @@ RUN service postgresql start && \
     psql imdb postgres < $HOME/data/imdb/imdb.sql; 
 
 # Specify the default command to run
-WORKDIR ${HOME}
 USER ${NB_USER}
+ENV SHELL /usr/bin/bash
+WORKDIR ${HOME}
 #RUN cd ${HOME}
 #USER postgres
 #CMD ["/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/var/lib/postgresql/10/main", "-l", "logfile", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"; "su", "-", "jovyan"]
