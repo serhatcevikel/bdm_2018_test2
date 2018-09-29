@@ -26,9 +26,6 @@ RUN apt-get update && \
     libunwind-dev expect curl curl-dev wget less htop \
     vim screen net-tools; \
 
-    ## install R kernel for jupyter
-    Rscript $HOME/rpack.R; \
-
     # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
     echo "screen" >> /etc/profile; \
@@ -74,6 +71,9 @@ RUN apt-get update && \
     # java env variables 
     echo "JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/environment; \
     echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
+
+    ## install R kernel for jupyter
+    Rscript $HOME/rpack.R; \
     
     # own home directory by user
     chown -R ${NB_UID} ${HOME}
