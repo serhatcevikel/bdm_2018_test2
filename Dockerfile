@@ -24,53 +24,53 @@ RUN apt-get update && \
     sudo postgresql r-base libssl-dev \
     libpq-dev parallel default-jre\
     libunwind-dev expect curl wget less htop \
-    vim screen net-tools;
-    echo "startup_message off" >> /etc/screenrc;
+    vim screen net-tools; \
+    echo "startup_message off" >> /etc/screenrc; \
     
     # install node
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
-    apt install -y nodejs build-essential;
+    apt install -y nodejs build-essential; \
 
     # change postgres password
-    echo "postgres:postgres" | chpasswd;
+    echo "postgres:postgres" | chpasswd; \
     
     # pg config
-    perl -i -pe 's/(md5|peer)$/trust/g' /etc/postgresql/10/main/pg_hba.conf;
+    perl -i -pe 's/(md5|peer)$/trust/g' /etc/postgresql/10/main/pg_hba.conf; \
 
     # make jovyan sudoer with no password prompt
-    echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan;
+    echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan; \
 
     # take care of sh symlink
-    if [ -e /usr/bin/sh ];
-    then
-        rm /usr/bin/sh
-    fi;
+    if [ -e /usr/bin/sh ]; \
+    then \
+        rm /usr/bin/sh \
+    fi; \
 
-    ln -s /usr/bin/bash /usr/bin/sh;
+    ln -s /usr/bin/bash /usr/bin/sh; \
     #RUN pg_createcluster -u postgres -g postgres 10 main
 
     # install latest notebook and other pip packages
     pip3 install --no-cache notebook beakerx sos sos-notebook \
         quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions \
     
-    jupyter-nbextensions-configurator RISE nbpresent;
+    jupyter-nbextensions-configurator RISE nbpresent; \
 
     ## install beaker kernels
-    beakerx install;
+    beakerx install; \
 
     # tldr
     npm install tldr -g; \
-    tldr -u
+    tldr -u; \
 
     #jdbc for postgresql
     wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar; \
 
     ## install R kernel for jupyter
-    Rscript $HOME/rpack.R;
+    Rscript $HOME/rpack.R; \
 
     # java env variables 
     echo "JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/environment; \
-    echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment;
+    echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
     
     # own home directory by user
     chown -R ${NB_UID} ${HOME};
@@ -97,7 +97,7 @@ RUN python3 -m bash_kernel.install; \
     jupyter-nbextension enable autoscroll/main  --user; \
     jupyter-nbextension enable rubberband/main --user; \
     jupyter-nbextension enable exercise2/main --user; \
-    cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json;
+    cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json; \
 
     # bashrc
     echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> $HOME/.bashrc; \
@@ -108,17 +108,17 @@ RUN python3 -m bash_kernel.install; \
 
     ## pgcli default options
     mkdir -p $HOME/.config/pgcli; \
-    cp $HOME/pgcli_config $HOME/.config/pgcli/config;
+    cp $HOME/pgcli_config $HOME/.config/pgcli/config; \
 
     # quilt
     quilt install serhatcevikel/bdm_data; \
     quilt export serhatcevikel/bdm_data $HOME/data; \
 
     # gunzip database
-    gunzip -k $HOME/data/imdb/imdb.sql.gz
+    gunzip -k $HOME/data/imdb/imdb.sql.gz; \
 
     # run expect script for parallel
-    expect ${HOME}/expect_script    
+    expect ${HOME}/expect_script;
 
 # start postgresql and create imdb database
 USER root
