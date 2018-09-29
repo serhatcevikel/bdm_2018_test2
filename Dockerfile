@@ -23,8 +23,11 @@ RUN apt-get update && \
     python3-pip \
     sudo postgresql r-base libssl-dev \
     libpq-dev parallel default-jre\
-    libunwind-dev expect curl wget less htop \
+    libunwind-dev expect curl curl-dev wget less htop \
     vim screen net-tools; \
+
+    ## install R kernel for jupyter
+    Rscript $HOME/rpack.R; \
 
     # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
@@ -67,9 +70,6 @@ RUN apt-get update && \
 
     #jdbc for postgresql
     wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar; \
-
-    ## install R kernel for jupyter
-    Rscript $HOME/rpack.R; \
 
     # java env variables 
     echo "JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/environment; \
