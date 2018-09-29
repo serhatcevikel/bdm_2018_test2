@@ -1,4 +1,4 @@
-#FROM ubuntu:bionic
+#FROM ubuntu:bionic --user
 #FROM  postgres:10.5
 FROM debian:buster-20180831
 
@@ -17,13 +17,7 @@ RUN adduser --disabled-password \
 
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
-USER root
-RUN chown -R ${NB_UID} ${HOME}
-USER ${NB_USER}
 
-
-#RUN apt-get update && \
-USER root
 RUN apt-get update && \
     apt-get install -y man manpages \
     python3-pip \
@@ -31,80 +25,102 @@ RUN apt-get update && \
     libpq-dev parallel default-jre\
     libunwind-dev expect curl wget less htop \
     vim screen net-tools;
+    echo "startup_message off" >> /etc/screenrc;
+    
+    # install node
+    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
+    apt install -y nodejs build-essential;
 
-RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
-apt-get install -y nodejs;
+    # change postgres password
+    echo "postgres:postgres" | chpasswd;
+    
+    # pg config
+    perl -i -pe 's/(md5|peer)$/trust/g' /etc/postgresql/10/main/pg_hba.conf;
 
-RUN apt install -y build-essential
+    # make jovyan sudoer with no password prompt
+    echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan;
 
+    # take care of sh symlink
+    if [ -e /usr/bin/sh ];
+    then
+        rm /usr/bin/sh
+    fi;
 
-RUN echo "postgres:postgres" | chpasswd
-RUN perl -i -pe 's/(md5|peer)$/trust/g' /etc/postgresql/10/main/pg_hba.conf
-RUN echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan
+    ln -s /usr/bin/bash /usr/bin/sh;
+    #RUN pg_createcluster -u postgres -g postgres 10 main
 
-#RUN pg_createcluster -u postgres -g postgres 10 main
+    # install latest notebook and other pip packages
+    pip3 install --no-cache notebook beakerx sos sos-notebook \
+        quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions \
+    
+    jupyter-nbextensions-configurator RISE nbpresent;
 
-# install latest notebook
-#RUN pip3 install --no-cache-dir notebook==5.*
+    ## install beaker kernels
+    beakerx install;
 
-RUN pip3 install --no-cache notebook beakerx sos sos-notebook \
-quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions \
-jupyter-nbextensions-configurator RISE nbpresent;
+    # tldr
+    npm install tldr -g; \
+    tldr -u
 
-## install R kernel for jupyter
-#RUN  Rscript $HOME/rpack.R
+    #jdbc for postgresql
+    wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar; \
 
-RUN beakerx install
-RUN chown -R ${NB_UID} ${HOME}
-USER jovyan
+    ## install R kernel for jupyter
+    Rscript $HOME/rpack.R;
+
+    # java env variables 
+    echo "JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/environment; \
+    echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment;
+    
+    # own home directory by user
+    chown -R ${NB_UID} ${HOME};
+
+USER ${NB_USER}
 
 # nbpresent
-RUN python3 -m bash_kernel.install
-RUN python3 -m sos_notebook.install
-RUN jupyter contrib nbextension install --user
-RUN jupyter nbextensions_configurator enable --user
-RUN jupyter nbextension install nbpresent --py --overwrite --user
-RUN jupyter nbextension enable nbpresent --py --user
-RUN jupyter serverextension enable nbpresent --py --user
-RUN jupyter-nbextension enable codefolding/main --user
-RUN jupyter-nbextension install rise --py --user
-RUN jupyter-nbextension enable splitcell/splitcell --user
-RUN jupyter-nbextension enable hide_input/main --user
-RUN jupyter-nbextension enable nbextensions_configurator/tree_tab/main --user
-RUN jupyter-nbextension enable nbextensions_configurator/config_menu/main --user
-RUN jupyter-nbextension enable contrib_nbextensions_help_item/main  --user
-RUN jupyter-nbextension enable scroll_down/main --user
-RUN jupyter-nbextension enable toc2/main --user
-RUN jupyter-nbextension enable autoscroll/main  --user
-RUN jupyter-nbextension enable rubberband/main --user
-RUN jupyter-nbextension enable exercise2/main --user
-RUN cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json
+RUN python3 -m bash_kernel.install; \
+    python3 -m sos_notebook.install; \
+    jupyter contrib nbextension install --user; \
+    jupyter nbextensions_configurator enable --user; \
+    jupyter nbextension install nbpresent --py --overwrite --user; \
+    jupyter nbextension enable nbpresent --py --user; \
+    jupyter serverextension enable nbpresent --py --user; \
+    jupyter-nbextension enable codefolding/main --user; \
+    jupyter-nbextension install rise --py --user; \
+    jupyter-nbextension enable splitcell/splitcell --user; \
+    jupyter-nbextension enable hide_input/main --user; \
+    jupyter-nbextension enable nbextensions_configurator/tree_tab/main --user; \
+    jupyter-nbextension enable nbextensions_configurator/config_menu/main --user; \
+    jupyter-nbextension enable contrib_nbextensions_help_item/main  --user; \
+    jupyter-nbextension enable scroll_down/main --user; \
+    jupyter-nbextension enable toc2/main --user; \
+    jupyter-nbextension enable autoscroll/main  --user; \
+    jupyter-nbextension enable rubberband/main --user; \
+    jupyter-nbextension enable exercise2/main --user; \
+    cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json;
 
-# tldr
-USER root
-RUN npm install tldr -g
-RUN tldr -u
+    # bashrc
+    echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> $HOME/.bashrc; \
+    echo "export LC_ALL=C.UTF-8" >> $HOME/.bashrc; \
+    echo "export LANG=C.UTF-8" >> $HOME/.bashrc; \
+    echo "export EDITOR=vim" >> $HOME/.bashrc; \
+    echo "screen" >> $HOME/.bashrc; \
 
-#jdk? javahome?
-RUN wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar 
-#RUN sudo -i -u postgres /bin/bash -c "/usr/lib/postgresql/10/bin/pg_ctl -D /etc/postgresql/10/main start"
-RUN chown -R ${NB_UID} ${HOME}
+    ## pgcli default options
+    mkdir -p $HOME/.config/pgcli; \
+    cp $HOME/pgcli_config $HOME/.config/pgcli/config;
 
-# quilt
-USER jovyan
-RUN echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> $HOME/.bashrc
-RUN echo "export LC_ALL=C.UTF-8" >> $HOME/.bashrc
-RUN echo "export LANG=C.UTF-8" >> $HOME/.bashrc
-RUN echo "export EDITOR=vim" >> $HOME/.bashrc
-RUN mkdir -p $HOME/.config/pgcli
-RUN cp $HOME/pgcli_config $HOME/.config/pgcli/config
-RUN quilt install serhatcevikel/bdm_data
-RUN quilt export serhatcevikel/bdm_data $HOME/data
-RUN gunzip -k $HOME/data/imdb/imdb.sql.gz
+    # quilt
+    quilt install serhatcevikel/bdm_data; \
+    quilt export serhatcevikel/bdm_data $HOME/data; \
 
-## pgcli default options
+    # gunzip database
+    gunzip -k $HOME/data/imdb/imdb.sql.gz
 
-# create imdb database
+    # run expect script for parallel
+    expect ${HOME}/expect_script    
+
+# start postgresql and create imdb database
 USER root
 RUN service postgresql start && \
     createdb -U postgres imdb && \
@@ -112,8 +128,8 @@ RUN service postgresql start && \
 
 # Specify the default command to run
 
-USER jovyan
-RUN cd $HOME
+USER ${NB_USER}
+#RUN cd ${HOME}
 #USER postgres
 #CMD ["/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/var/lib/postgresql/10/main", "-l", "logfile", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"; "su", "-", "jovyan"]
 #ENTRYPOINT ["sudo", "-u", "postgres", "/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/etc/postgresql/10/main", "start"; "sudo", "-u", "jovyan", "jupyter", "notebook", "--notebook-dir='/home/jovyan'", "--ip", "0.0.0.0"]
