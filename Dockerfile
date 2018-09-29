@@ -25,7 +25,10 @@ RUN apt-get update && \
     libpq-dev parallel default-jre\
     libunwind-dev expect curl wget less htop \
     vim screen net-tools; \
+
+    # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
+    echo "screen" >> /etc/profile; \
     
     # install node
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
