@@ -22,7 +22,7 @@ RUN apt-get update && \
     apt-get install -y man manpages \
     python3-pip \
     sudo postgresql r-base libssl-dev \
-    libpq-dev parallel default-jre\
+    libpq-dev parallel default-jre \
     libunwind-dev expect curl curl-dev wget less htop \
     vim screen net-tools; \
 
@@ -76,7 +76,7 @@ RUN apt-get update && \
     echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
     
     # own home directory by user
-    chown -R ${NB_UID} ${HOME};
+    chown -R ${NB_UID} ${HOME}
 
 USER ${NB_USER}
 
