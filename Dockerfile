@@ -43,7 +43,7 @@ RUN apt-get update && \
     # take care of sh symlink
     if [ -e /usr/bin/sh ]; \
     then \
-        rm /usr/bin/sh \
+        rm /usr/bin/sh; \
     fi; \
 
     ln -s /usr/bin/bash /usr/bin/sh; \
