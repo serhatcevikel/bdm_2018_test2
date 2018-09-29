@@ -127,7 +127,7 @@ RUN service postgresql start && \
     psql imdb postgres < $HOME/data/imdb/imdb.sql; 
 
 # Specify the default command to run
-
+WORKDIR ${HOME}
 USER ${NB_USER}
 #RUN cd ${HOME}
 #USER postgres

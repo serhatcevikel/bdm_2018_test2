@@ -1,4 +1,4 @@
-    cranlist <- c("devtools", "data.table",
+    cranlist <- c("httr", "devtools", "data.table",
                     "RPostgreSQL", "sqldf", "gdtools",
                     "JuniperKernel")
 
@@ -19,3 +19,5 @@
         IRkernel::installspec(user = FALSE)
     }
 
+    # install juniper
+    JuniperKernel::installJuniper(useJupyterDefault = T)
