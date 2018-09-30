@@ -18,14 +18,15 @@ RUN adduser --disabled-password \
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 
-RUN apt-get install -y man manpages \
+RUN apt-get update && \
+    apt-get install -y man manpages \
     python3-pip \
     sudo postgresql r-base libssl-dev \
     libpq-dev parallel default-jre \
     libunwind-dev expect curl libcurl4-gnutls-dev \
     wget less htop \
     vim screen net-tools; \
-    #  apt-get update && \
+    
 
     # install latest notebook and other pip packages
     pip3 install --no-cache notebook beakerx sos sos-notebook \
