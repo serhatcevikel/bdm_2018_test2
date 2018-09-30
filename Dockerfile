@@ -27,6 +27,7 @@ RUN apt update && \
     libpq-dev parallel default-jre \
     libunwind-dev expect curl libcurl4-gnutls-dev \
     wget less htop \
+    gnuplot-x11 \ --user
     vim screen net-tools; \
     
 
@@ -46,7 +47,7 @@ RUN apt update && \
 
     # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
-    echo "screen" >> /etc/profile; \
+    #echo "screen" >> /etc/profile; \
     
     # install node
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
@@ -111,7 +112,7 @@ RUN python3 -m bash_kernel.install; \
     echo "export LC_ALL=C.UTF-8" >> $HOME/.bashrc; \
     echo "export LANG=C.UTF-8" >> $HOME/.bashrc; \
     echo "export EDITOR=vim" >> $HOME/.bashrc; \
-    echo "screen" >> $HOME/.bashrc; \
+    #echo "screen" >> $HOME/.bashrc; \
 
     ## pgcli default options
     mkdir -p $HOME/.config/pgcli; \

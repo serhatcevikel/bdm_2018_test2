@@ -1,11 +1,13 @@
     cranlist <- c("httr", "devtools", "data.table",
-                    "RPostgreSQL", "sqldf", "gdtools",
-                    "JuniperKernel")
+                    "RPostgreSQL", "sqldf")
+                    
+    # "gdtools", "JuniperKernel")
+    # later tidyverse and plotly
 
     githublist <- c("IRkernel/IRkernel")
 
-    mirid <- match("tr", getCRANmirrors()[,8])
-    chooseCRANmirror(graphics=FALSE, ind=mirid)
+    #mirid <- match("tr", getCRANmirrors()[,8])
+    #chooseCRANmirror(graphics=FALSE, ind=mirid)
 
     ## cran packages
     for (package in cranlist)
