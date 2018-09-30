@@ -18,8 +18,10 @@ RUN adduser --disabled-password \
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 
-RUN apt-get update && \
-    apt-get install -y man manpages \
+RUN apt update && \
+    apt dist-upgrade -y && \
+    apt autoremove -y && \
+    apt install -y man manpages \
     python3-pip \
     sudo postgresql r-base libssl-dev \
     libpq-dev parallel default-jre \
