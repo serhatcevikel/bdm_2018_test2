@@ -28,7 +28,7 @@ RUN apt-get update && \
 
     # install latest notebook and other pip packages
     pip3 install --no-cache notebook beakerx sos sos-notebook \
-        quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions \
+        quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions; \
 
     #jdbc for postgresql
     wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar; \
