@@ -46,7 +46,7 @@ RUN apt-get update && \
     
     # install node
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
-    apt install -y nodejs build-essential; \
+        apt install -y nodejs build-essential; \
 
     # change postgres password
     echo "postgres:postgres" | chpasswd; \
