@@ -22,7 +22,8 @@ RUN apt-get install -y man manpages \
     python3-pip \
     sudo postgresql r-base libssl-dev \
     libpq-dev parallel default-jre \
-    libunwind-dev expect curl libcurl4 wget less htop \
+    libunwind-dev expect curl libcurl4-gnutls-dev \
+    wget less htop \
     vim screen net-tools; \
     #  apt-get update && \
 
