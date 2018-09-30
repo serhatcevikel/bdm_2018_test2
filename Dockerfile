@@ -23,8 +23,22 @@ RUN apt-get update && \
     python3-pip \
     sudo postgresql r-base libssl-dev \
     libpq-dev parallel default-jre \
-    libunwind-dev expect curl curl-dev wget less htop \
+    libunwind-dev expect curl libcurl4 wget less htop \
     vim screen net-tools; \
+
+    # install latest notebook and other pip packages
+    pip3 install --no-cache notebook beakerx sos sos-notebook \
+        quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions \
+
+    #jdbc for postgresql
+    wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar; \
+
+    # java env variables 
+    echo "JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/environment; \
+    echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
+
+    ## install R kernel for jupyter
+    Rscript $HOME/rpack.R; \
 
     # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
@@ -51,10 +65,6 @@ RUN apt-get update && \
 
     ln -s /usr/bin/bash /usr/bin/sh; \
     #RUN pg_createcluster -u postgres -g postgres 10 main
-
-    # install latest notebook and other pip packages
-    pip3 install --no-cache notebook beakerx sos sos-notebook \
-        quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions \
     
     jupyter-nbextensions-configurator RISE nbpresent; \
 
@@ -64,16 +74,6 @@ RUN apt-get update && \
     # tldr
     npm install tldr -g; \
     tldr -u; \
-
-    #jdbc for postgresql
-    wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar; \
-
-    # java env variables 
-    echo "JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/environment; \
-    echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
-
-    ## install R kernel for jupyter
-    Rscript $HOME/rpack.R; \
     
     # own home directory by user
     chown -R ${NB_UID} ${HOME}
