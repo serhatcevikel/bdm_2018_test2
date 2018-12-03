@@ -47,8 +47,8 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75
         imongo-kernel; \
 
     # install xidel
-    wget 'https://netcologne.dl.sourceforge.net/project/videlibri/Xidel/Xidel%200.9.8/xidel_0.9.8-1_amd64.deb';\
-    dpkg -i xidel_0.9.8-1_amd64.deb;\
+    wget "https://netcologne.dl.sourceforge.net/project/videlibri/Xidel/Xidel%200.9.8/xidel_0.9.8-1_amd64.deb" && \
+    dpkg -i xidel_0.9.8-1_amd64.deb; \
 
 
     #jdbc for postgresql
