@@ -18,9 +18,7 @@ RUN adduser --disabled-password \
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
-    echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list && \
-    apt update && \
+RUN apt update && \
     apt dist-upgrade -y && \
     apt autoremove -y && \
     apt install -y man manpages \
@@ -31,8 +29,14 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75
     wget less htop lynx pandoc \
     gnuplot-x11 csvkit git \
     vim screen net-tools \
-    basex mongo-db jq; \
-   
+    basex jq gnupg; \
+
+
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
+    echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list && \
+    apt update && \
+    apt install -y mongo-db; \   
+
     # install q 
     #qdeblink=$(lynx -listonly -nonumbers -dump "https://github.com/harelba/q/releases" | grep -P "\.deb$" | head -1); \
     #qdebfile=${qdeblink##*/}; \
