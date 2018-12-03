@@ -29,13 +29,13 @@ RUN apt update && \
     wget less htop lynx pandoc \
     gnuplot-x11 csvkit git \
     vim screen net-tools \
-    basex jq gnupg; \
+    basex jq gnupg mongodb; \
 
 
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
-    echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list && \
-    apt update && \
-    apt install -y mongodb-org; \   
+    #apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
+    #echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list && \
+    #apt update && \
+    #apt install -y mongodb-org; \   
 
     # install q 
     #qdeblink=$(lynx -listonly -nonumbers -dump "https://github.com/harelba/q/releases" | grep -P "\.deb$" | head -1); \
@@ -48,7 +48,7 @@ RUN apt update && \
     pip3 install --no-cache notebook beakerx sos sos-notebook \
         quilt bash_kernel pgcli ipython-sql postgres_kernel \
         pgspecial jupyter_contrib_nbextensions \
-        imongo-kernel; \
+        imongo-kernel ipython_mongo; \
 
     # install xidel
     wget "https://netcologne.dl.sourceforge.net/project/videlibri/Xidel/Xidel%200.9.8/xidel_0.9.8-1_amd64.deb" && \
@@ -64,7 +64,7 @@ RUN apt update && \
     echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
 
     ## install R kernel for jupyter
-    #Rscript $HOME/binder/rpack.R; \
+    Rscript $HOME/binder/rpack.R; \
 
     # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
@@ -180,10 +180,10 @@ RUN python3 -m bash_kernel.install; \
 
 
 # start mongo
-#USER root
-#RUN mkdir -p /home/jovyan/mongo; \
-#    mongod --dbpath /home/jovyan/mongo && \
-#    for file in $HOME/data/comtrade_s1/2010e/*.json; do mongoimport --db comtrade --collection 2010s1 $file; done;
+USER root
+RUN mkdir -p /home/jovyan/mongo; \
+    mongod --dbpath /home/jovyan/mongo && \
+    for file in $HOME/data/comtrade_s1/2010e/*.json; do mongoimport --db comtrade --collection 2010s1 $file; done;
 
 
 # Specify the default command to run

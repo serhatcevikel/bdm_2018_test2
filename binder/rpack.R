@@ -1,5 +1,5 @@
-    cranlist <- c("httr", "devtools", "data.table",
-                    "listviewer", "XML", "jsonlite", "mongolite")
+    cranlist <- c("httr", "devtools",
+                    "listviewer", "XML", "htmltidy", "xml2", "jsonlite", "mongolite")
     # later tidyverse and plotly
 
     githublist <- c("IRkernel/IRkernel")
