@@ -64,7 +64,7 @@ RUN apt update && \
     echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
 
     ## install R kernel for jupyter
-    Rscript $HOME/binder/rpack.R; \
+    #Rscript $HOME/binder/rpack.R; \
 
     # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
@@ -180,10 +180,10 @@ RUN python3 -m bash_kernel.install; \
 
 
 # start mongo
-USER root
-RUN mkdir -p /home/jovyan/mongo; \
-    mongod --dbpath /home/jovyan/mongo && \
-    for file in $HOME/data/comtrade_s1/2010e/*.json; do mongoimport --db comtrade --collection 2010s1 $file; done;
+#USER root
+#RUN mkdir -p /home/jovyan/mongo; \
+#    mongod --dbpath /home/jovyan/mongo && \
+#    for file in $HOME/data/comtrade_s1/2010e/*.json; do mongoimport --db comtrade --collection 2010s1 $file; done;
 
 
 # Specify the default command to run
