@@ -18,32 +18,49 @@ RUN adduser --disabled-password \
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 
-RUN apt update && \
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
+    echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list && \
+    apt update && \
     apt dist-upgrade -y && \
     apt autoremove -y && \
     apt install -y man manpages \
     python3-pip \
-    sudo postgresql r-base libssl-dev \
-    libpq-dev parallel default-jre \
+    sudo r-base libssl-dev \
+    libpq-dev libcairo2-dev parallel default-jre \
     libunwind-dev expect curl libcurl4-gnutls-dev \
-    wget less htop \
-    gnuplot-x11 \ --user
-    vim screen net-tools; \
-    
+    wget less htop lynx pandoc \
+    gnuplot-x11 csvkit git \
+    vim screen net-tools \
+    basex mongo-db jq; \
+   
+    # install q 
+    #qdeblink=$(lynx -listonly -nonumbers -dump "https://github.com/harelba/q/releases" | grep -P "\.deb$" | head -1); \
+    #qdebfile=${qdeblink##*/}; \
+
+    #wget -P ${HOME}/binder $qdeblink; \
+    #dpkg -i ${HOME}/binder/$qdebfile; \
 
     # install latest notebook and other pip packages
     pip3 install --no-cache notebook beakerx sos sos-notebook \
-        quilt bash_kernel pgcli ipython-sql postgres_kernel jupyter_contrib_nbextensions; \
+        quilt bash_kernel pgcli ipython-sql postgres_kernel \
+        pgspecial jupyter_contrib_nbextensions \
+        imongo-kernel; \
+
+    # install xidel
+    wget 'https://netcologne.dl.sourceforge.net/project/videlibri/Xidel/Xidel%200.9.8/xidel_0.9.8-1_amd64.deb'
+    dpkg -i xidel_0.9.8-1_amd64.deb
+
 
     #jdbc for postgresql
-    wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar; \
+    #wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar; \
+
 
     # java env variables 
     echo "JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/environment; \
     echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
 
     ## install R kernel for jupyter
-    Rscript $HOME/rpack.R; \
+    Rscript $HOME/binder/rpack.R; \
 
     # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
@@ -54,10 +71,10 @@ RUN apt update && \
         apt install -y nodejs build-essential; \
 
     # change postgres password
-    echo "postgres:postgres" | chpasswd; \
+    # echo "postgres:postgres" | chpasswd; \
     
     # pg config
-    perl -i -pe 's/(md5|peer)$/trust/g' /etc/postgresql/10/main/pg_hba.conf; \
+    # perl -i -pe 's/(md5|peer)$/trust/g' /etc/postgresql/11/main/pg_hba.conf; \
 
     # make jovyan sudoer with no password prompt
     echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan; \
@@ -78,7 +95,6 @@ RUN apt update && \
 
     # tldr
     npm install tldr -g; \
-    tldr -u; \
     
     # own home directory by user
     chown -R ${NB_UID} ${HOME}
@@ -105,7 +121,10 @@ RUN python3 -m bash_kernel.install; \
     jupyter-nbextension enable autoscroll/main  --user; \
     jupyter-nbextension enable rubberband/main --user; \
     jupyter-nbextension enable exercise2/main --user; \
-    cp $HOME/common.json $HOME/.jupyter/nbconfig/common.json; \
+    cp $HOME/binder/common.json $HOME/.jupyter/nbconfig/common.json; \
+
+    # update tldr cache
+    tldr -u; \
 
     # bashrc
     echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> $HOME/.bashrc; \
@@ -115,24 +134,53 @@ RUN python3 -m bash_kernel.install; \
     #echo "screen" >> $HOME/.bashrc; \
 
     ## pgcli default options
-    mkdir -p $HOME/.config/pgcli; \
-    cp $HOME/pgcli_config $HOME/.config/pgcli/config; \
+    #mkdir -p $HOME/.config/pgcli; \
+    #cp $HOME/binder/pgcli_config $HOME/.config/pgcli/config; \
 
     # quilt
     quilt install serhatcevikel/bdm_data; \
     quilt export serhatcevikel/bdm_data $HOME/data; \
 
     # gunzip database
-    gunzip -k $HOME/data/imdb/imdb.sql.gz; \
+    #gunzip -k $HOME/data/imdb/imdb.sql.gz; \
 
     # run expect script for parallel
-    expect ${HOME}/expect_script;
+    expect ${HOME}/binder/expect_script; \
+
+    # extract tsv files onto tsv2
+    #datadir=$HOME/data; \
+    #imdbdir=$datadir/imdb; \
+
+    #mkdir -p $imdbdir/tsv2; \
+
+    #find $imdbdir/tsv -mindepth 1 | \
+    #parallel -k -j0 "basenm=\$(basename {}); gunzip -c {} > ${imdbdir}/tsv2/\${basenm%.gz};";
+
+    # extract comtrade files
+    datadir=$HOME/data; \
+    comtradedir=$datadir/comtrade_s1; \
+    
+    mkdir -p $comtradedir/2010e; \
+    
+    find $comtradedir/2010 -mindepth 1 | \
+    parallel -k -j0 "basenm=\$(basename {}); gunzip -c {} > ${comtradedir}/2010e/\${basenm%.gz};";
+    
+
 
 # start postgresql and create imdb database
+#USER root
+#RUN service postgresql start && \
+#    createdb -U postgres imdb2 && \
+#    gunzip -c $HOME/data/imdb/imdb.sql.gz | psql imdb2 postgres;
+    #psql imdb2 postgres < $HOME/data/imdb/imdb.sql; 
+
+
+# start mongo
 USER root
-RUN service postgresql start && \
-    createdb -U postgres imdb && \
-    psql imdb postgres < $HOME/data/imdb/imdb.sql; 
+RUN mkdir -p /home/jovyan/mongo; \
+    mongod --dbpath /home/jovyan/mongo && \
+    for file in $HOME/data/comtrade_s1/2010e/*.json; do mongoimport --db comtrade --collection 2010s1 $file; done;
+
 
 # Specify the default command to run
 USER ${NB_USER}

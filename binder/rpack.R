@@ -1,7 +1,5 @@
     cranlist <- c("httr", "devtools", "data.table",
-                    "RPostgreSQL", "sqldf")
-                    
-    # "gdtools", "JuniperKernel")
+                    "listviewer", "XML", "jsonlite", "mongolite")
     # later tidyverse and plotly
 
     githublist <- c("IRkernel/IRkernel")
@@ -25,4 +23,4 @@
     }
 
     # install juniper
-    JuniperKernel::installJuniper(useJupyterDefault = T)
+    #JuniperKernel::installJuniper(useJupyterDefault = T)
