@@ -29,8 +29,8 @@ RUN apt update && \
     wget less htop lynx pandoc \
     gnuplot-x11 csvkit git \
     vim screen net-tools \
-    libssl-dev libsasl2-dev libxml2-dev \
-    basex jq gnupg mongodb; \
+    libssl-dev libsasl2-dev libxml2-dev libxml2-utils \
+    tidy basex jq gnupg mongodb; \
 
 
     #apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
