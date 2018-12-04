@@ -182,9 +182,10 @@ RUN python3 -m bash_kernel.install; \
 
 # start mongo
 #USER root
-#RUN mkdir -p /home/jovyan/mongo; \
-#    mongod --dbpath /home/jovyan/mongo && \
-#    for file in $HOME/data/comtrade_s1/2010e/*.json; do mongoimport --db comtrade --collection 2010s1 $file; done;
+USER ${NB_USER}
+RUN mkdir -p /home/jovyan/mongo; \
+    mongod --dbpath /home/jovyan/mongo && \
+    for file in $HOME/data/comtrade_s1/2010e/*.json; do mongoimport --db comtrade --collection 2010s1 $file; done;
 
 
 # Specify the default command to run
