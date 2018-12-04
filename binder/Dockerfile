@@ -29,7 +29,7 @@ RUN apt update && \
     wget less htop lynx pandoc \
     gnuplot-x11 csvkit git \
     vim screen net-tools \
-    libssl-dev libsasl2-dev \
+    libssl-dev libsasl2-dev libxml2-dev \
     basex jq gnupg mongodb; \
 
 
