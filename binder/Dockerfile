@@ -104,8 +104,8 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
     4A6AC5C675B6155682729C9E08D51A0A7501105C \
     8B44A05C308955D191956559A5CEE20A90348D47;
 
-RUN gpg --verify /tmp/hadoop.tar.gz.asc \
-    && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
+#RUN gpg --verify /tmp/hadoop.tar.gz.asc \
+RUN tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
     && rm /tmp/hadoop.tar.gz*
 
 RUN ln -s /opt/hadoop-$HADOOP_VERSION/etc/hadoop /etc/hadoop
