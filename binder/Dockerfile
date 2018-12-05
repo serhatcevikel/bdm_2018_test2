@@ -21,65 +21,29 @@ COPY . ${HOME}
 RUN apt update && \
     apt dist-upgrade -y && \
     apt autoremove -y && \
-    apt install -y man manpages \
+    apt install -y \
     python3-pip \
-    sudo r-base libssl-dev \
-    libpq-dev libcairo2-dev parallel default-jre \
-    libunwind-dev expect curl libcurl4-gnutls-dev \
-    wget less htop lynx pandoc \
-    gnuplot-x11 csvkit git \
-    vim screen net-tools \
-    libssl-dev libsasl2-dev libxml2-dev libxml2-utils \
-    tidy basex jq gnupg mongodb; \
+    sudo libssl-dev \
+    default-jre \
+    expect curl libcurl4-gnutls-dev \
+    wget less \
+    git \
+    screen net-tools \
+    gnupg \
+    ca-certificates-java; \
 
-
-    #apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
-    #echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list && \
-    #apt update && \
-    #apt install -y mongodb-org; \   
-
-    # install q 
-    #qdeblink=$(lynx -listonly -nonumbers -dump "https://github.com/harelba/q/releases" | grep -P "\.deb$" | head -1); \
-    #qdebfile=${qdeblink##*/}; \
-
-    #wget -P ${HOME}/binder $qdeblink; \
-    #dpkg -i ${HOME}/binder/$qdebfile; \
 
     # install latest notebook and other pip packages
-    pip3 install --no-cache notebook beakerx sos sos-notebook \
-        quilt bash_kernel pgcli ipython-sql postgres_kernel \
-        pgspecial jupyter_contrib_nbextensions \
-        imongo-kernel ipython_mongo; \
-
-    # install xidel
-    wget "https://netcologne.dl.sourceforge.net/project/videlibri/Xidel/Xidel%200.9.8/xidel_0.9.8-1_amd64.deb" && \
-    dpkg -i xidel_0.9.8-1_amd64.deb; \
-
-
-    #jdbc for postgresql
-    #wget -P /usr/lib/jvm/default-java/lib https://jdbc.postgresql.org/download/postgresql-42.2.5.jar; \
-
+    pip3 install --no-cache notebook sos sos-notebook \
+        quilt bash_kernel \
+        jupyter_contrib_nbextensions; \
 
     # java env variables 
     echo "JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/environment; \
     echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
 
-    ## install R kernel for jupyter
-    Rscript $HOME/binder/rpack.R; \
-
     # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
-    #echo "screen" >> /etc/profile; \
-    
-    # install node
-    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
-        apt install -y nodejs build-essential; \
-
-    # change postgres password
-    # echo "postgres:postgres" | chpasswd; \
-    
-    # pg config
-    # perl -i -pe 's/(md5|peer)$/trust/g' /etc/postgresql/11/main/pg_hba.conf; \
 
     # make jovyan sudoer with no password prompt
     echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan; \
@@ -91,114 +55,86 @@ RUN apt update && \
     fi; \
 
     ln -s /usr/bin/bash /usr/bin/sh; \
-    #RUN pg_createcluster -u postgres -g postgres 10 main
-    
-    jupyter-nbextensions-configurator RISE nbpresent; \
-
-    ## install beaker kernels
-    beakerx install; \
-
-    # tldr
-    npm install tldr -g; \
-    
     # own home directory by user
-    chown -R ${NB_UID} ${HOME}
+    chown -R ${NB_UID} ${HOME};
+
+# https://hub.docker.com/r/uhopper/hadoop/~/dockerfile/
+
+ENV JAVA_HOME=/usr/lib/jvm/default-java
+
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
+    07617D4968B34D8F13D56E20BE5AAA0BA210C095 \
+    2CAC83124870D88586166115220F69801F27E622 \
+    4B96409A098DBD511DF2BC18DBAF69BEA7239D59 \
+    9DD955653083EFED6171256408458C39E964B5FF \
+    B6B3F7EDA5BA7D1E827DE5180DFF492D8EE2F25C \
+    6A67379BEFC1AE4D5595770A34005598B8F47547 \
+    47660BC98BC433F01E5C90581209E7F13D0C92B9 \
+    CE83449FDC6DACF9D24174DCD1F99F6EE3CD2163 \
+    A11DF05DEA40DA19CE4B43C01214CF3F852ADB85 \
+    686E5EDF04A4830554160910DF0F5BBC30CD0996 \
+    5BAE7CB144D05AD1BB1C47C75C6CC6EFABE49180 \
+    AF7610D2E378B33AB026D7574FB955854318F669 \
+    6AE70A2A38F466A5D683F939255ADF56C36C5F0F \
+    70F7AB3B62257ABFBD0618D79FDB12767CC7352A \
+    842AAB2D0BC5415B4E19D429A342433A56D8D31A \
+    1B5D384B734F368052862EB55E43CAB9AEC77EAF \
+    785436A782586B71829C67A04169AA27ECB31663 \
+    5E49DA09E2EC9950733A4FF48F1895E97869A2FB \
+    A13B3869454536F1852C17D0477E02D33DD51430 \
+    A6220FFCC86FE81CE5AAC880E3814B59E4E11856 \
+    EFE2E7C571309FE00BEBA78D5E314EEF7340E1CB \
+    EB34498A9261F343F09F60E0A9510905F0B000F0 \
+    3442A6594268AC7B88F5C1D25104A731B021B57F \
+    6E83C32562C909D289E6C3D98B25B9B71EFF7770 \
+    E9216532BF11728C86A11E3132CF4BF4E72E74D3 \
+    E8966520DA24E9642E119A5F13971DA39475BD5D \
+    1D369094D4CFAC140E0EF05E992230B1EB8C6EFA \
+    A312CE6A1FA98892CB2C44EBA79AB712DE5868E6 \
+    0445B7BFC4515847C157ECD16BA72FF1C99785DE \
+    B74F188889D159F3D7E64A7F348C6D7A0DCED714 \
+    4A6AC5C675B6155682729C9E08D51A0A7501105C \
+    8B44A05C308955D191956559A5CEE20A90348D47
+ 
+ENV HADOOP_VERSION 2.7.2
+ENV HADOOP_URL https://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+
+RUN set -x \
+    && curl -fSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
+    && curl -fSL "$HADOOP_URL.asc" -o /tmp/hadoop.tar.gz.asc \
+    && gpg --verify /tmp/hadoop.tar.gz.asc \
+    && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
+    && rm /tmp/hadoop.tar.gz*
+
+RUN ln -s /opt/hadoop-$HADOOP_VERSION/etc/hadoop /etc/hadoop
+RUN cp /etc/hadoop/mapred-site.xml.template /etc/hadoop/mapred-site.xml
+RUN mkdir /opt/hadoop-$HADOOP_VERSION/logs
+
+RUN mkdir /hadoop-data
+
+ENV HADOOP_PREFIX=/opt/hadoop-$HADOOP_VERSION
+ENV HADOOP_CONF_DIR=/etc/hadoop
+ENV MULTIHOMED_NETWORK=1
+
+ENV USER=root
+ENV PATH $HADOOP_PREFIX/bin/:$PATH
+
 
 USER ${NB_USER}
 
-# nbpresent
 RUN python3 -m bash_kernel.install; \
     python3 -m sos_notebook.install; \
     jupyter contrib nbextension install --user; \
     jupyter nbextensions_configurator enable --user; \
-    jupyter nbextension install nbpresent --py --overwrite --user; \
-    jupyter nbextension enable nbpresent --py --user; \
-    jupyter serverextension enable nbpresent --py --user; \
-    jupyter-nbextension enable codefolding/main --user; \
-    jupyter-nbextension install rise --py --user; \
-    jupyter-nbextension enable splitcell/splitcell --user; \
-    jupyter-nbextension enable hide_input/main --user; \
-    jupyter-nbextension enable nbextensions_configurator/tree_tab/main --user; \
-    jupyter-nbextension enable nbextensions_configurator/config_menu/main --user; \
-    jupyter-nbextension enable contrib_nbextensions_help_item/main  --user; \
-    jupyter-nbextension enable scroll_down/main --user; \
     jupyter-nbextension enable toc2/main --user; \
     jupyter-nbextension enable autoscroll/main  --user; \
-    jupyter-nbextension enable rubberband/main --user; \
-    jupyter-nbextension enable exercise2/main --user; \
     cp $HOME/binder/common.json $HOME/.jupyter/nbconfig/common.json; \
 
-    # update tldr cache
-    tldr -u; \
-
-    # bashrc
     echo "export JAVA_HOME=/usr/lib/jvm/default-java" >> $HOME/.bashrc; \
     echo "export LC_ALL=C.UTF-8" >> $HOME/.bashrc; \
     echo "export LANG=C.UTF-8" >> $HOME/.bashrc; \
-    echo "export EDITOR=vim" >> $HOME/.bashrc; \
-    #echo "screen" >> $HOME/.bashrc; \
+    echo "export EDITOR=vim" >> $HOME/.bashrc;
 
-    ## pgcli default options
-    #mkdir -p $HOME/.config/pgcli; \
-    #cp $HOME/binder/pgcli_config $HOME/.config/pgcli/config; \
-
-    # quilt
-    quilt install serhatcevikel/bdm_data; \
-    quilt export serhatcevikel/bdm_data $HOME/data; \
-
-    # gunzip database
-    #gunzip -k $HOME/data/imdb/imdb.sql.gz; \
-
-    # run expect script for parallel
-    expect ${HOME}/binder/expect_script; \
-
-    # extract tsv files onto tsv2
-    #datadir=$HOME/data; \
-    #imdbdir=$datadir/imdb; \
-
-    #mkdir -p $imdbdir/tsv2; \
-
-    #find $imdbdir/tsv -mindepth 1 | \
-    #parallel -k -j0 "basenm=\$(basename {}); gunzip -c {} > ${imdbdir}/tsv2/\${basenm%.gz};";
-
-    # extract comtrade files
-    datadir=$HOME/data; \
-    comtradedir=$datadir/comtrade_s1; \
-    
-    mkdir -p $comtradedir/2010e; \
-    
-    find $comtradedir/2010 -mindepth 1 | \
-    parallel -k -j0 "basenm=\$(basename {}); gunzip -c {} > ${comtradedir}/2010e/\${basenm%.gz};";
-    
-
-
-# start postgresql and create imdb database
-#USER root
-#RUN service postgresql start && \
-#    createdb -U postgres imdb2 && \
-#    gunzip -c $HOME/data/imdb/imdb.sql.gz | psql imdb2 postgres;
-    #psql imdb2 postgres < $HOME/data/imdb/imdb.sql; 
-
-
-# start mongo
-#USER root
-USER ${NB_USER}
-RUN mkdir -p /home/jovyan/mongo; \
-    mongod --dbpath /home/jovyan/mongo && \
-    for file in $HOME/data/comtrade_s1/2010e/*.json; do mongoimport --db comtrade --collection 2010s1 $file; done;
-
-
-# Specify the default command to run
 USER ${NB_USER}
 ENV SHELL /usr/bin/bash
 WORKDIR ${HOME}
-#RUN cd ${HOME}
-#USER postgres
-#CMD ["/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/var/lib/postgresql/10/main", "-l", "logfile", "start"; "jupyter", "notebook", "--ip", "0.0.0.0"; "su", "-", "jovyan"]
-#ENTRYPOINT ["sudo", "-u", "postgres", "/usr/lib/postgresql/10/bin/pg_ctl", "-D", "/etc/postgresql/10/main", "start"; "sudo", "-u", "jovyan", "jupyter", "notebook", "--notebook-dir='/home/jovyan'", "--ip", "0.0.0.0"]
-#CMD service postgresql start && jupyter notebook --notebook-dir="/home/jovyan" --ip 0.0.0.0
-#CMD ["jupyter", "notebook", "--ip", "0.0.0.0"]
-#CMD sudo -i -u postgres /bin/bash -c "/usr/lib/postgresql/10/bin/pg_ctl -D /etc/postgresql/10/main -l /var/lib/postgresql/logfile start" && sudo -i -u jovyan /bin/bash -c "jupyter notebook --notebook-dir='/home/jovyan' --ip 0.0.0.0"
-#CMD /usr/lib/postgresql/10/bin/pg_ctl -D /etc/postgresql/10/main -l /var/lib/postgresql/logfile start && jupyter notebook --notebook-dir='/home/jovyan' --ip 0.0.0.0
-#CMD postgresql start
-#ENTRYPOINT ["service", "postgresql", "start"]
