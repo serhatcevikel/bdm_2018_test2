@@ -35,12 +35,12 @@ RUN apt update && \
 
     # install latest notebook and other pip packages
     pip3 install --no-cache notebook sos sos-notebook \
-        quilt bash_kernel \
+        bash_kernel \
         jupyter_contrib_nbextensions; \
 
     # java env variables 
     echo "JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/environment; \
-    echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
+    #echo "CLASSPATH=$JAVA_HOME/lib/postgresql-42.2.5.jar" >> /etc/environment; \
 
     # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
@@ -61,6 +61,14 @@ RUN apt update && \
 # https://hub.docker.com/r/uhopper/hadoop/~/dockerfile/
 
 ENV JAVA_HOME=/usr/lib/jvm/default-java
+
+ 
+ENV HADOOP_VERSION 2.7.2
+ENV HADOOP_URL https://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+
+RUN set -x \
+    && curl -fSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
+    && curl -fSL "$HADOOP_URL.asc" -o /tmp/hadoop.tar.gz.asc;
 
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
     07617D4968B34D8F13D56E20BE5AAA0BA210C095 \
@@ -94,15 +102,9 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
     0445B7BFC4515847C157ECD16BA72FF1C99785DE \
     B74F188889D159F3D7E64A7F348C6D7A0DCED714 \
     4A6AC5C675B6155682729C9E08D51A0A7501105C \
-    8B44A05C308955D191956559A5CEE20A90348D47
- 
-ENV HADOOP_VERSION 2.7.2
-ENV HADOOP_URL https://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+    8B44A05C308955D191956559A5CEE20A90348D47;
 
-RUN set -x \
-    && curl -fSL "$HADOOP_URL" -o /tmp/hadoop.tar.gz \
-    && curl -fSL "$HADOOP_URL.asc" -o /tmp/hadoop.tar.gz.asc \
-    && gpg --verify /tmp/hadoop.tar.gz.asc \
+RUN gpg --verify /tmp/hadoop.tar.gz.asc \
     && tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
     && rm /tmp/hadoop.tar.gz*
 
