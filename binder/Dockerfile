@@ -20,17 +20,11 @@ COPY . ${HOME}
 
 
 RUN apt update && \
-    apt autoremove -y && \
     apt install -y \
-    python3-pip \
     sudo libssl-dev \
-    default-jdk \
-    expect curl libcurl4-gnutls-dev \
-    wget less \
-    git \
-    screen net-tools \
-    gnupg vim \
-    ca-certificates-java iptables nmap openssh-server; \
+    curl libcurl4-gnutls-dev \
+    ca-certificates-java \
+    default-jdk; \
 
 
 
@@ -101,9 +95,20 @@ ENV PATH $HADOOP_PREFIX/bin:$HADOOP_PREFIX/sbin:$PATH
 ###
 
 # install latest notebook and other pip packages
-RUN pip3 install --no-cache notebook sos sos-notebook \
-        bash_kernel \
-        jupyter_contrib_nbextensions; \
+RUN apt install -y \ 
+    python3-pip \
+    expect \
+    wget less \
+    git \
+    screen net-tools \
+    gnupg vim \
+    iptables nmap \
+    openssh-server; \
+
+        
+    pip3 install --no-cache notebook sos sos-notebook \
+    bash_kernel \
+    jupyter_contrib_nbextensions
 
 USER ${NB_USER}
 
