@@ -19,9 +19,9 @@ RUN adduser --disabled-password \
 COPY . ${HOME}
 
 
-#RUN apt update && \
-#apt autoremove -y && \
-RUN apt install -y \
+RUN apt update && \
+    apt autoremove -y && \
+    apt install -y \
     python3-pip \
     sudo libssl-dev \
     default-jre \
