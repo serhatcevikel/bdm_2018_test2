@@ -8,6 +8,9 @@ ENV HOME /home/${NB_USER}
 
 USER root
 
+COPY . ${HOME}
+
+
 # https://hub.docker.com/r/uhopper/hadoop/~/dockerfile/
 
 ENV JAVA_HOME=/usr/lib/jvm/default-java
