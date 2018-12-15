@@ -3,7 +3,7 @@
 FROM debian:buster-20181112
 
 # create user
-ENV NB_USER jovyan
+ENV NB_USER hadoop
 ENV NB_UID 1000
 ENV HOME /home/${NB_USER}
 
@@ -12,7 +12,7 @@ RUN adduser --disabled-password \
     --gecos "Default user" \
     --uid ${NB_UID} \
     ${NB_USER} && \
-    echo "jovyan:jovyan" | chpasswd && \
+    echo "hadoop:hadoop" | chpasswd && \
     usermod -aG sudo ${NB_USER}
 
 # Make sure the contents of our repo are in ${HOME}
@@ -29,8 +29,8 @@ RUN apt update && \
     wget less \
     git \
     screen net-tools \
-    gnupg \
-    ca-certificates-java; \
+    gnupg vim \
+    ca-certificates-java iptables nmap openssh-server; \
 
 
     # install latest notebook and other pip packages
@@ -45,8 +45,8 @@ RUN apt update && \
     # rc configuration
     echo "startup_message off" >> /etc/screenrc; \
 
-    # make jovyan sudoer with no password prompt
-    echo "jovyan ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jovyan; \
+    # make hadoop sudoer with no password prompt
+    echo "hadoop ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/hadoop; \
 
     # take care of sh symlink
     if [ -e /usr/bin/sh ]; \
@@ -63,7 +63,8 @@ RUN apt update && \
 ENV JAVA_HOME=/usr/lib/jvm/default-java
 
  
-ENV HADOOP_VERSION 2.7.2
+ENV HADOOP_VERSION 2.9.2
+#2.7.2
 ENV HADOOP_URL https://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 
 RUN set -x \
@@ -86,7 +87,7 @@ ENV MULTIHOMED_NETWORK=1
 
 ENV USER=root
 ENV PATH $HADOOP_PREFIX/bin/:$PATH
-
+###
 
 USER ${NB_USER}
 
