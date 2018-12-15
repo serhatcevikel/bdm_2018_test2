@@ -33,10 +33,6 @@ RUN apt update && \
     ca-certificates-java iptables nmap openssh-server; \
 
 
-    # install latest notebook and other pip packages
-    pip3 install --no-cache notebook sos sos-notebook \
-        bash_kernel \
-        jupyter_contrib_nbextensions; \
 
     # java env variables 
     echo "JAVA_HOME=/usr/lib/jvm/default-java" >> /etc/environment; \
@@ -63,8 +59,8 @@ RUN apt update && \
 ENV JAVA_HOME=/usr/lib/jvm/default-java
 
  
-ENV HADOOP_VERSION 2.9.2
-#ENV HADOOP_VERSION 3.1.1
+#ENV HADOOP_VERSION 2.9.2
+ENV HADOOP_VERSION 3.1.1
 #2.7.2
 ENV HADOOP_URL https://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 
@@ -89,20 +85,25 @@ ENV HADOOP_HOME=$HADOOP_PREFIX
 ENV HADOOP_CONF_DIR=/etc/hadoop
 ENV MULTIHOMED_NETWORK=1
 
-RUN chown -R hadoop:hadoop $HADOOP_PREDIX && \
-    chown -R hadoop:hadoop /hadoop-data && \
-    chmod 755 /hadoop-data; \
-
-    sed -i '/^#PubkeyAuthentication/ s/^#//' /etc/ssh/sshd_config; \
-    sed -i '/^#PermitRootLogin/ s/^#//' /etc/ssh/sshd_config; \
-    sed -i '/StrictHostKeyChecking/ s/^#//' /etc/ssh/ssh_config; \
-    sed -i '/StrictHostKeyChecking/ s/ask/no/' /etc/ssh/ssh_config; \
-
-    cp $HOME/hadoop_config/*.xml $HADOOP_CONF_DIR
+#RUN chown -R hadoop:hadoop $HADOOP_PREFIX && \
+#    chown -R hadoop:hadoop /hadoop-data && \
+#    chmod 755 /hadoop-data; \
+#
+#    sed -i '/^#PubkeyAuthentication/ s/^#//' /etc/ssh/sshd_config; \
+#    sed -i '/^#PermitRootLogin/ s/^#//' /etc/ssh/sshd_config; \
+#    sed -i '/StrictHostKeyChecking/ s/^#//' /etc/ssh/ssh_config; \
+#    sed -i '/StrictHostKeyChecking/ s/ask/no/' /etc/ssh/ssh_config; \
+#
+#    cp $HOME/hadoop_config/*.xml $HADOOP_CONF_DIR
 
 ENV USER=root
 ENV PATH $HADOOP_PREFIX/bin:$HADOOP_PREFIX/sbin:$PATH
 ###
+
+# install latest notebook and other pip packages
+RUN pip3 install --no-cache notebook sos sos-notebook \
+        bash_kernel \
+        jupyter_contrib_nbextensions; \
 
 USER ${NB_USER}
 
