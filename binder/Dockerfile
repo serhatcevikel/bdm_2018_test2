@@ -18,10 +18,10 @@ RUN adduser --disabled-password \
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 
-RUN apt update && \
-    apt dist-upgrade -y && \
-    apt autoremove -y && \
-    apt install -y \
+
+#RUN apt update && \
+#apt autoremove -y && \
+RUN apt install -y \
     python3-pip \
     sudo libssl-dev \
     default-jre \
