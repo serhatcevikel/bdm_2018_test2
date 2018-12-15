@@ -1,6 +1,6 @@
 #FROM ubuntu:bionic --user
 #FROM  postgres:10.5
-FROM serhatcevikel:hadoop1
+FROM serhatcevikel/bigdata:hadoop1
 
 USER root
 RUN tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
