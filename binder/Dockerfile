@@ -9,7 +9,7 @@ ENV HOME /home/${NB_USER}
 USER root
 
 COPY . ${HOME}
-
+RUN  chown -R ${NB_UID} ${HOME};
 
 # https://hub.docker.com/r/uhopper/hadoop/~/dockerfile/
 
