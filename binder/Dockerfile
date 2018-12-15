@@ -63,8 +63,8 @@ RUN apt update && \
 ENV JAVA_HOME=/usr/lib/jvm/default-java
 
  
-#ENV HADOOP_VERSION 2.9.2
-ENV HADOOP_VERSION 3.1.1
+ENV HADOOP_VERSION 2.9.2
+#ENV HADOOP_VERSION 3.1.1
 #2.7.2
 ENV HADOOP_URL https://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 
