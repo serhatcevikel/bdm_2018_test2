@@ -8,7 +8,7 @@ ENV HOME /home/${NB_USER}
 
 USER root
 
-COPY !(binder) ${HOME}
+COPY . ${HOME}
 
 
 # https://hub.docker.com/r/uhopper/hadoop/~/dockerfile/
