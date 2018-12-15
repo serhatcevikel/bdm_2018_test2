@@ -73,8 +73,10 @@ RUN set -x \
     && curl -fSL "$HADOOP_URL.asc" -o /tmp/hadoop.tar.gz.asc;
 
 #RUN gpg --verify /tmp/hadoop.tar.gz.asc \
-RUN tar -xvf /tmp/hadoop.tar.gz -C /opt/ \
-    && rm /tmp/hadoop.tar.gz*
+RUN tar -xvf /tmp/hadoop.tar.gz -C /opt/ && \
+    echo "untared" && \
+    rm /tmp/hadoop.tar.gz* && \
+    echo "removed"
 
 RUN ln -s /opt/hadoop-$HADOOP_VERSION/etc/hadoop /etc/hadoop
 RUN cp /etc/hadoop/mapred-site.xml.template /etc/hadoop/mapred-site.xml
