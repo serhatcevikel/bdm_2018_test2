@@ -69,7 +69,7 @@ RUN /usr/lib/postgresql/11/bin/pg_ctl start -D /etc/postgresql/11/main/ -m smart
 # extract all files
 USER ${NB_USER}
 RUN rm $HOME/data/imdb/imdb.sql.gz; \
-    find $HOME/data -name "*.gz" -exec gunzip {};
+    find $HOME/data -name "*.gz" -exec gunzip {} \;
 
 USER ${NB_USER}
 ENV SHELL /usr/bin/bash
