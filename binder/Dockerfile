@@ -19,15 +19,11 @@ ENV MULTIHOMED_NETWORK=1
 ENV USER=root
 ENV PATH $HADOOP_PREFIX/bin:$HADOOP_PREFIX/sbin:$PATH
 
-RUN chown -R ${NB_UID} $HADOOP_PREFIX && \
-    chown -R ${NB_UID} /hadoop-data && \
-    chmod 755 /hadoop-data; \
-
-    sed -i '/^#PubkeyAuthentication/ s/^#//' /etc/ssh/sshd_config; \
+RUN sed -i '/^#PubkeyAuthentication/ s/^#//' /etc/ssh/sshd_config; \
     sed -i '/^#PermitRootLogin/ s/^#//' /etc/ssh/sshd_config; \
     sed -i '/StrictHostKeyChecking/ s/^#//' /etc/ssh/ssh_config; \
-    sed -i '/StrictHostKeyChecking/ s/ask/no/' /etc/ssh/ssh_config;
-
+    sed -i '/StrictHostKeyChecking/ s/ask/no/' /etc/ssh/ssh_config; \
+    service ssh start;
 
 RUN apt install -y \ 
         postgresql; \
@@ -41,10 +37,13 @@ RUN apt install -y \
     # pg config
     perl -i -pe 's/(md5|peer)$/trust/g' /etc/postgresql/11/main/pg_hba.conf;
 
-RUN service ssh start;
 
 ENV CLASSPATH $JAVA_HOME/lib/postgresql-42.2.5.jar:$CLASSPATH
 ENV PATH $PATH:/usr/lib/postgresql/11/bin
+
+RUN chown -R ${NB_UID} $HADOOP_PREFIX && \
+    chown -R ${NB_UID} /hadoop-data && \
+    chmod 755 /hadoop-data;
 
 USER ${NB_USER}
 RUN cp $HOME/hadoop_config/*.xml $HADOOP_CONF_DIR; \
