@@ -19,6 +19,3 @@ do
            if (temp !=9999 && q ~ /[01459]/ && temp > max) max = temp }
          END { print max }'
 done
-#END=$(date +%s.%N)
-#DIFF=$(echo "$END - $START" | bc)
-#echo $DIFF
