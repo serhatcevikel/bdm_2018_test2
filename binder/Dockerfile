@@ -5,6 +5,7 @@ FROM serhatcevikel/bigdata:hadoop03
 ENV NB_USER hadoop
 ENV NB_UID 1000
 ENV HOME /home/${NB_USER}
+ENV JAVA_HOME=/usr/lib/jvm/default-java
 
 USER root
 
@@ -42,7 +43,7 @@ ENV PATH=$SQOOP_HOME/bin:$PATH
 
 USER root
 RUN mkdir -p $SQOOP_HOME && \
-    chown -R $NB_UID $SQOOP_HOME && \
+    chown -R $NB_UID $SQOOP_HOME;
 
 
 USER ${NB_USER}
