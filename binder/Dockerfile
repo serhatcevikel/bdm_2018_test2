@@ -32,8 +32,10 @@ RUN apt install -y \
     
     # start ssh
     service ssh start;\
-    sudo -H -u ${NB_USER} bash -c "${HADOOP_HOME}/sbin/start-dfs.sh && \
-    hdfs dfs -put $HOME/data/ / && \
+    sudo -H -u ${NB_USER} bash -c "export JAVA_HOME=/usr/lib/jvm/default-java; \
+    yes Y | ${HADOOP_HOME}/bin/hdfs namenode -format && \
+    ${HADOOP_HOME}/sbin/start-dfs.sh && \
+    ${HADOOP_HOME}/bin/hdfs dfs -put $HOME/data/ / && \
     ${HADOOP_HOME}/sbin/stop-dfs.sh";\
     service ssh stop;
 
