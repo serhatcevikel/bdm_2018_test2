@@ -1,0 +1,130 @@
+   Column   | Type | Collation | Nullable | Default | Storage  | Stats target | Description 
+------------+------+-----------+----------+---------+----------+--------------+-------------
+ tconst     | text |           | not null |         | extended |              | 
+ profession | text |           | not null |         | extended |              | 
+ nconst     | text |           | not null |         | extended |              | 
+Indexes:
+    "tconst_pk_08" PRIMARY KEY, btree (tconst, profession, nconst)
+
+                              Table "public.genres_molten"
+ Column | Type | Collation | Nullable | Default | Storage  | Stats target | Description 
+--------+------+-----------+----------+---------+----------+--------------+-------------
+ tconst | text |           | not null |         | extended |              | 
+ genres | text |           | not null |         | extended |              | 
+Indexes:
+    "tconst_pk_07" PRIMARY KEY, btree (tconst, genres)
+
+                                      Table "public.name_basics"
+      Column       |  Type   | Collation | Nullable | Default | Storage  | Stats target | Description 
+-------------------+---------+-----------+----------+---------+----------+--------------+-------------
+ nconst            | text    |           | not null |         | extended |              | 
+ primaryname       | text    |           |          |         | extended |              | 
+ birthyear         | integer |           |          |         | plain    |              | 
+ deathyear         | integer |           |          |         | plain    |              | 
+ primaryprofession | text    |           |          |         | extended |              | 
+ knownfortitles    | text    |           |          |         | extended |              | 
+Indexes:
+    "tconst_pk_05" PRIMARY KEY, btree (nconst)
+
+       Index "public.tconst_pk"
+ Column | Type | Definition | Storage  
+--------+------+------------+----------
+ tconst | text | tconst     | extended
+primary key, btree, for table "public.title_basics"
+
+      Index "public.tconst_pk_02"
+ Column | Type | Definition | Storage  
+--------+------+------------+----------
+ tconst | text | tconst     | extended
+primary key, btree, for table "public.title_crew"
+
+           Index "public.tconst_pk_03"
+    Column     | Type |  Definition   | Storage  
+---------------+------+---------------+----------
+ tconst        | text | tconst        | extended
+ principalcast | text | principalcast | extended
+primary key, btree, for table "public.title_principals_melt"
+
+      Index "public.tconst_pk_04"
+ Column | Type | Definition | Storage  
+--------+------+------------+----------
+ tconst | text | tconst     | extended
+primary key, btree, for table "public.title_ratings"
+
+      Index "public.tconst_pk_05"
+ Column | Type | Definition | Storage  
+--------+------+------------+----------
+ nconst | text | nconst     | extended
+primary key, btree, for table "public.name_basics"
+
+      Index "public.tconst_pk_06"
+ Column | Type | Definition | Storage  
+--------+------+------------+----------
+ tconst | text | tconst     | extended
+primary key, btree, for table "public.title_episode"
+
+      Index "public.tconst_pk_07"
+ Column | Type | Definition | Storage  
+--------+------+------------+----------
+ tconst | text | tconst     | extended
+ genres | text | genres     | extended
+primary key, btree, for table "public.genres_molten"
+
+        Index "public.tconst_pk_08"
+   Column   | Type | Definition | Storage  
+------------+------+------------+----------
+ tconst     | text | tconst     | extended
+ profession | text | profession | extended
+ nconst     | text | nconst     | extended
+primary key, btree, for table "public.crew_molten"
+
+                                    Table "public.title_basics"
+     Column     |  Type   | Collation | Nullable | Default | Storage  | Stats target | Description 
+----------------+---------+-----------+----------+---------+----------+--------------+-------------
+ tconst         | text    |           | not null |         | extended |              | 
+ titletype      | text    |           |          |         | extended |              | 
+ primarytitle   | text    |           |          |         | extended |              | 
+ originaltitle  | text    |           |          |         | extended |              | 
+ isadult        | boolean |           |          |         | plain    |              | 
+ startyear      | integer |           |          |         | plain    |              | 
+ endyear        | integer |           |          |         | plain    |              | 
+ runtimeminutes | integer |           |          |         | plain    |              | 
+ genres         | text    |           |          |         | extended |              | 
+Indexes:
+    "tconst_pk" PRIMARY KEY, btree (tconst)
+
+                                 Table "public.title_crew"
+  Column   | Type | Collation | Nullable | Default | Storage  | Stats target | Description 
+-----------+------+-----------+----------+---------+----------+--------------+-------------
+ tconst    | text |           | not null |         | extended |              | 
+ directors | text |           |          |         | extended |              | 
+ writers   | text |           |          |         | extended |              | 
+Indexes:
+    "tconst_pk_02" PRIMARY KEY, btree (tconst)
+
+                                   Table "public.title_episode"
+    Column     |  Type   | Collation | Nullable | Default | Storage  | Stats target | Description 
+---------------+---------+-----------+----------+---------+----------+--------------+-------------
+ tconst        | text    |           | not null |         | extended |              | 
+ parenttconst  | text    |           |          |         | extended |              | 
+ seasonnumber  | integer |           |          |         | plain    |              | 
+ episodenumber | integer |           |          |         | plain    |              | 
+Indexes:
+    "tconst_pk_06" PRIMARY KEY, btree (tconst)
+
+                             Table "public.title_principals_melt"
+    Column     | Type | Collation | Nullable | Default | Storage  | Stats target | Description 
+---------------+------+-----------+----------+---------+----------+--------------+-------------
+ tconst        | text |           | not null |         | extended |              | 
+ principalcast | text |           | not null |         | extended |              | 
+Indexes:
+    "tconst_pk_03" PRIMARY KEY, btree (tconst, principalcast)
+
+                                   Table "public.title_ratings"
+    Column     |  Type   | Collation | Nullable | Default | Storage  | Stats target | Description 
+---------------+---------+-----------+----------+---------+----------+--------------+-------------
+ tconst        | text    |           | not null |         | extended |              | 
+ averagerating | numeric |           |          |         | main     |              | 
+ numvotes      | integer |           |          |         | plain    |              | 
+Indexes:
+    "tconst_pk_04" PRIMARY KEY, btree (tconst)

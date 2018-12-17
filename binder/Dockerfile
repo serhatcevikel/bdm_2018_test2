@@ -19,7 +19,8 @@ COPY . ${HOME}
 RUN chown -R ${NB_UID} ${HOME} && \
     chmod +x -R ${HOME}/codes;
 
-RUN apt install -y texlive-xetex;
+RUN apt install -y \
+    texlive-xetex moreutils;
 
 # install sqoop
 #ENV SQOOP_HOME=/opt/sqoop
