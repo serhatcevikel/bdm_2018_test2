@@ -24,12 +24,10 @@ RUN apt install -y \
     rm ${HOME}/binder/$qdebfile; \
     
     # start ssh
-    service ssh start;
-
-USER ${NB_USER}
-    
-RUN start-dfs.sh && \
-    hdfs dfs -put $HOME/data/ /;
+    service ssh start;\
+    sudo -H -u otheruser bash -c "start-dfs.sh && \
+    hdfs dfs -put $HOME/data/ / && \
+    stop-dfs.sh";
 
 
 # install sqoop
