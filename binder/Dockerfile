@@ -25,9 +25,10 @@ RUN apt install -y \
     
     # start ssh
     service ssh start;\
-    sudo -H -u ${NB_USER} bash -c "start-dfs.sh && \
+    sudo -H -u ${NB_USER} bash -c "${HADOOP_HOME}/sbin/start-dfs.sh && \
     hdfs dfs -put $HOME/data/ / && \
-    stop-dfs.sh";
+    ${HADOOP_HOME}/sbin/stop-dfs.sh";\
+    service ssh stop;
 
 
 # install sqoop
