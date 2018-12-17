@@ -25,7 +25,7 @@ RUN apt install -y \
     
     # start ssh
     service ssh start;\
-    sudo -H -u otheruser bash -c "start-dfs.sh && \
+    sudo -H -u ${NB_USER} bash -c "start-dfs.sh && \
     hdfs dfs -put $HOME/data/ / && \
     stop-dfs.sh";
 
