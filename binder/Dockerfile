@@ -15,6 +15,34 @@ ENV USER=root
 
 USER root
 
+# install pig
+USER root
+RUN mkdir -p $PIG_HOME && \
+    chown -R $NB_UID $PIG_HOME;
+
+
+USER ${NB_USER}
+RUN curl -o /tmp/pig-${PIG_VERSION}.tar.gz \
+    http://ftp.itu.edu.tr/Mirror/Apache/pig/${PIG_VERSION}/pig-${PIG_VERSION}.tar.gz && \
+    
+    tar -xvf /tmp/pig-${PIG_VERSION}.tar.gz -C ${PIG_HOME} --strip-components=1 && \
+    rm /tmp/pig-${PIG_VERSION}.tar.gz;
+
+# install hive
+USER root
+RUN mkdir -p $HIVE_HOME && \
+    chown -R $NB_UID $HIVE_HOME;
+
+
+USER ${NB_USER}
+RUN curl -o /tmp/apache-hive-${HIVE_VERSION}-bin.tar.gz \
+    http://ftp.itu.edu.tr/Mirror/Apache/hive/hive-${HIVE_VERSION}/apache-hive-${HIVE_VERSION}-bin.tar.gz && \
+    
+    tar -xvf /tmp/apache-hive-${HIVE_VERSION}-bin.tar.gz -C $HIVE_HOME --strip-components=1 && \
+    rm /tmp/apache-hive-${HIVE_VERSION}-bin.tar.gz;
+
+USER root
+
 COPY . ${HOME}
 RUN chown -R ${NB_UID} ${HOME} && \
     chmod +x -R ${HOME}/codes;
