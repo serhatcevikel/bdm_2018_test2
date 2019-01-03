@@ -27,7 +27,7 @@ RUN mkdir -p $PIG_HOME && \
 
 USER ${NB_USER}
 RUN curl -o /tmp/pig-${PIG_VERSION}.tar.gz \
-    http://ftp.itu.edu.tr/Mirror/Apache/pig/${PIG_VERSION}/pig-${PIG_VERSION}.tar.gz && \
+    http://ftp.itu.edu.tr/Mirror/Apache/pig/pig-${PIG_VERSION}/pig-${PIG_VERSION}.tar.gz && \
     
     tar -xvf /tmp/pig-${PIG_VERSION}.tar.gz -C ${PIG_HOME} --strip-components=1 && \
     rm /tmp/pig-${PIG_VERSION}.tar.gz;
