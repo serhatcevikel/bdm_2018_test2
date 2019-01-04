@@ -13,7 +13,16 @@ ENV HADOOP_CONF_DIR=/etc/hadoop
 ENV MULTIHOMED_NETWORK=1
 ENV USER=root
 ENV HIVE_CONF_DIR=$HIVE_HOME/conf
-ENV HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$HIVE_HOME/lib/*
+ENV HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$HIVE_HOME/lib
+ENV HCAT_HOME=$HIVE_HOME/hcatalog
+ENV PATH=$PATH:$HCAT_HOME/bin
+ENV PIG_CLASSPATH=$HCAT_HOME/share/hcatalog/hive-hcatalog-core*.jar:\
+$HCAT_HOME/share/hcatalog/hive-hcatalog-pig-adapter*.jar:\
+$HIVE_HOME/lib/hive-metastore-*.jar:$HIVE_HOME/lib/libthrift-*.jar:\
+$HIVE_HOME/lib/hive-exec-*.jar:$HIVE_HOME/lib/libfb303-*.jar:\
+$HIVE_HOME/lib/jdo2-api-*-ec.jar:$HIVE_HOME/conf:$HADOOP_HOME/conf:\
+$HIVE_HOME/lib/slf4j-api-*.jar
+ENV PIG_OPTS=-Dhive.metastore.uris=thrift://localhost:9083
 
 USER root
 
