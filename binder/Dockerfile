@@ -13,6 +13,7 @@ ENV HADOOP_CONF_DIR=/etc/hadoop
 ENV MULTIHOMED_NETWORK=1
 ENV USER=root
 ENV HIVE_CONF_DIR=$HIVE_HOME/conf
+ENV HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$HIVE_HOME/lib/*
 
 USER root
 
@@ -27,12 +28,14 @@ RUN apt install -y \
     rm /usr/lib/jvm/default-java; \
     ln -s /usr/lib/jvm/java-8-openjdk-amd64 /usr/lib/jvm/default-java; \
     rm /etc/alternatives/java; \
-    ln -s /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java /etc/alternatives/java; \
+    ln -s /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java /etc/alternatives/java;
 
-    cp ${HOME}/hive_config/* $HIVE_HOME/conf/;
 
 USER ${NB_USER}
-RUN schematool -initSchema -dbType derby
+RUN cp ${HOME}/hive_config/* $HIVE_HOME/conf/ && \
+    schematool -initSchema -dbType derby && \
+    ln -s $HIVE_HOME/lib/derby-10.10.2.0.jar $SQOOP_HOME/lib/derby-10.10.2.0.jar; \
+    ln -s $HIVE_HOME/lib/hive-exec.jar $SQOOP_HOME/lib/hive-exec.jar;
 
 USER ${NB_USER}
 ENV SHELL /usr/bin/bash

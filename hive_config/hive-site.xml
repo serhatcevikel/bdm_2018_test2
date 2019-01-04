@@ -72,7 +72,7 @@
   </property>
   <property>
     <name>hive.exec.local.scratchdir</name>
-    <value>/tmp/${system:user.name}</value>
+    <value>/tmp/hadoop</value>
     <description>Local scratch space for Hive jobs</description>
   </property>
   <property>
@@ -1682,7 +1682,7 @@
   </property>
   <property>
     <name>hive.querylog.location</name>
-    <value>/tmp/${system:user.name}</value>
+    <value>/tmp/hadoop</value>
     <description>Location of Hive run time structured log file</description>
   </property>
   <property>
@@ -3973,7 +3973,7 @@
   </property>
   <property>
     <name>hive.server2.logging.operation.log.location</name>
-    <value>/tmp/${system:user.name}/operation_logs</value>
+    <value>/tmp/hadoop/operation_logs</value>
     <description>Top level directory where operation logs are stored if logging functionality is enabled</description>
   </property>
   <property>
