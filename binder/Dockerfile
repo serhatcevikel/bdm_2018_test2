@@ -33,6 +33,7 @@ RUN apt install -y \
 
 USER ${NB_USER}
 RUN cp ${HOME}/hive_config/* $HIVE_HOME/conf/ && \
+    cp ${HOME}/hadoop_config/* ${HADOOP_HOME}/etc/ && \
     schematool -initSchema -dbType derby && \
     ln -s $HIVE_HOME/lib/derby-10.10.2.0.jar $SQOOP_HOME/lib/derby-10.10.2.0.jar; \
     ln -s $HIVE_HOME/lib/hive-exec.jar $SQOOP_HOME/lib/hive-exec.jar;
