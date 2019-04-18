@@ -30,13 +30,13 @@ RUN apt update && \
     gnuplot-x11 csvkit git \
     vim screen net-tools \
     libssl-dev libsasl2-dev libxml2-dev libxml2-utils \
-    tidy basex jq gnupg mongodb; \
+    tidy basex jq gnupg; \
+    #mongodb
 
-
-    #apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
-    #echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list && \
-    #apt update && \
-    #apt install -y mongodb-org; \   
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
+    echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list && \
+    apt update && \
+    apt install -y mongodb-org; \   
 
     # install q 
     #qdeblink=$(lynx -listonly -nonumbers -dump "https://github.com/harelba/q/releases" | grep -P "\.deb$" | head -1); \
